@@ -1,0 +1,10 @@
+<!-- 
+Shivam Agarwal
+shivamag@buffalo.edu
+UBIT 50289132
+ -->
+<html>
+<body onload="javascript:purchase(this.id);">
+	<jsp:include page="/WEB-INF/jsp/buypage.jsp"></jsp:include>
+</body>
+</html>

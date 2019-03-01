@@ -1,0 +1,21 @@
+<!-- 
+Shivam Agarwal
+shivamag@buffalo.edu
+UBIT 50289132
+ -->
+<html>
+
+<script type="text/javascript">
+function purchase(itemID){
+	
+	document.getElementById('login').submit();
+}
+
+</script>
+
+
+<body onload="javascript:purchase(this.id);">
+	<form id="login" action="login"></form>
+	<jsp:include page="/WEB-INF/jsp/buypage.jsp"></jsp:include>
+</body>
+</html>

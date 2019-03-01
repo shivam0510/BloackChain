@@ -1,0 +1,14 @@
+127.0.0.1 - - [14/Feb/2019:12:44:30 -0500] "GET / HTTP/1.1" 404 994
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:45:07 -0500] "GET /BlockChainLab1/index.jsp HTTP/1.1" 200 2471
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:45:14 -0500] "GET /favicon.ico HTTP/1.1" 404 1016
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:45:36 -0500] "GET /BlockChainLab1/login?accno=1&pass=admin HTTP/1.1" 200 3534
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:45:46 -0500] "GET /BlockChainLab1/buy?itemSelected=0&tokens=1&currency=USD&montcoin=100 HTTP/1.1" 200 3600
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:45:54 -0500] "GET /BlockChainLab1/buy?itemSelected=3&tokens=0&currency=USD&montcoin= HTTP/1.1" 200 3262
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:45:59 -0500] "GET /BlockChainLab1/sellpage.jsp HTTP/1.1" 200 1510
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:46:11 -0500] "GET /BlockChainLab1/sell?pdetails=Headset%2C+amazing+quality%2C+extremely+comfortable+&price=20&sellerAccNo=1 HTTP/1.1" 200 1672
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:46:27 -0500] "GET /BlockChainLab1/sell?pdetails=Watter+bottle%2C+750+ml%2C+unique%2C+rarely+used&price=10&sellerAccNo=1 HTTP/1.1" 200 1681
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:46:31 -0500] "GET /BlockChainLab1/index.jsp HTTP/1.1" 200 2471
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:46:37 -0500] "GET /BlockChainLab1/login?accno=1&pass=admin HTTP/1.1" 200 3534
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:46:56 -0500] "GET /BlockChainLab1/sellpage.jsp HTTP/1.1" 200 1510
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:47:17 -0500] "GET /BlockChainLab1/login?accno=1&pass=admin HTTP/1.1" 200 3534
+0:0:0:0:0:0:0:1 - - [14/Feb/2019:12:47:38 -0500] "GET /BlockChainLab1/buy?itemSelected=6&tokens=0&currency=USD&montcoin= HTTP/1.1" 200 3270
