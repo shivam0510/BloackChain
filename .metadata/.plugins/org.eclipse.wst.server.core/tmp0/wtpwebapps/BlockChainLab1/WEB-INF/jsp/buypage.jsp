@@ -13,8 +13,17 @@ function purchase(itemID){
 	document.getElementById('buyForm').submit();
 }
 
+function loginPage(itemID){
+	document.getElementById('itemSelected').value = itemID;
+	var frm = document.getElementById('buyForm');
+	frm.action = "loginPage";
+	frm.submit();
+}
+
 function redirectToSell(){
-	window.location.replace("http://localhost:8080/BlockChainLab1/sellpage.jsp")
+	document.getElementById('userDirection').value = "sell";
+	document.getElementById('buyForm').action = "loginPage";
+	document.getElementById('buyForm').submit();
 }
 
 function purchaseTokens() {
@@ -44,8 +53,11 @@ function deleteAccount(){
 <body>
 	<jsp:include page="/title.jsp"></jsp:include>
 	<br>
+		${message}
 	<br>
 	<form name="buyForm" id="buyForm" action="buy">
+		<input type="hidden" id="itemSelected" name="itemSelected" value="0"/>
+		<input type="hidden" id="userDirection" name="userDirection"/>
 		<%-- <table width="50%">
 			<tr>
 				<input type="hidden" id="itemSelected" name="itemSelected" value="0"/>
@@ -68,7 +80,7 @@ function deleteAccount(){
 				<td><input type="button" id="buyTokens" value="Buy Montcoins" name="buyTokens" onclick="javascript:purchaseTokens();"></td>
 			</tr>
 			<tr>
-				${message}
+				
 			</tr> 
 			<tr>
 				<td></td>
@@ -77,21 +89,31 @@ function deleteAccount(){
 			</tr>
 		</table> --%>
 		<h1>Buy Products</h1>
-		<table width="50%">
-			<thead>
-				<td width="20%" ><b>Product ID</b></td>
-				<td width="40%"><b>Product Description</b></td>
-				<td width="20%"><b>Price</b></td>
-				<td width="20%"></td>
+		<table width="75%">
+			<thead style="font-weight:bold">
+				<td width="15%" >Product ID</td>
+				<td width="35%">Product Description</td>
+				<td width="15%">Price</td>
+				<td width="15%">Seller ID</td>
 			</thead>
 			<tbody>
 				<c:forEach var="item" items="${products}">
 					<tr>
-						<td width="20%">${item.itemId}</td>
-						<td width="40%">${item.details}</td>
-						<td width="20%">${item.price}</td>
+						<td width="15%">${item.itemId}</td>
+						<td width="35%">${item.details}</td>
+						<td width="15%">${item.price}</td>
+						<td width="15%">${item.seller}</td>
 						<td width="20%">
-							<input type="button" id="${item.itemId}" onclick="javascript:purchase(this.id);" value="Buy Now" />
+							<c:choose>
+								<c:when test="${empty customer}">
+									<input type="button" id="${item.itemId}"
+										onclick="javascript:loginPage(this.id);" value="Buy Now" />
+								</c:when>
+								<c:otherwise>
+									<input type="button" id="${item.itemId}"
+										onclick="javascript:purchase(this.id);" value="Buy Now" />
+								</c:otherwise>
+							</c:choose>
 						</td>
 					</tr>
 					<tr></tr>
@@ -109,8 +131,16 @@ function deleteAccount(){
 			<tbody>
 				<tr>
 					<td><input type="button" value="Sell your product" onclick="javascript:redirectToSell();" /></td>
-					<td><input type="button" value="orders placed" onclick="javascript:listProducts();" /></td>	
-					<td><input type="button" value="Delete Account" onclick="javascript:deleteAccount();" /></td>
+					<td>
+						<c:if test="${not empty customer}">
+							<input type="button" value="orders placed" onclick="javascript:listProducts();" />	
+						</c:if>
+					</td>
+					<td>
+						<c:if test="${not empty customer}">
+							<input type="button" value="Delete Account" onclick="javascript:deleteAccount();" />
+						</c:if>
+					</td>
 				</tr>
 			</tbody>
 		</table>

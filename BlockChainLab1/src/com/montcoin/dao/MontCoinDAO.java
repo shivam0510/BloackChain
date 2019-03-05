@@ -48,7 +48,7 @@ public class MontCoinDAO {
 		String sql = "select MAX(accountNumber) from sqldb.member";
 		Integer cust = temp.queryForObject(sql,Integer.class);
 		int accNo = cust.intValue() + 1;
-	    sql="insert into sqldb.member(accountNumber,name,token,password) values("+accNo+",'"+name+"',0,'"+pass+"')";    
+	    sql="insert into sqldb.member(accountNumber,name,token,password) values("+accNo+",'"+name+"',500,'"+pass+"')";    
 	    temp.update(sql);
 	    return accNo;
 	}    
@@ -91,7 +91,7 @@ public class MontCoinDAO {
 			String sql = "update sqldb.member set token ="+(cust.getToken() - item.getPrice())+" where accountNumber="+cust.getAccountNumber();
 			temp.update(sql);
 			//mark item as sold
-			sql = "update sqldb.items set sold = 'yes' where itemid="+item.getItemId();
+			sql = "update sqldb.items set sold = 'yes', buyer = "+cust.getAccountNumber()+" where itemid="+item.getItemId();
 			temp.update(sql);
 			//add token to the seller
 			sql = "select * from sqldb.member where accountNumber ="+item.getSeller();

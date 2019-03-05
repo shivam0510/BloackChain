@@ -28,22 +28,48 @@ import com.montcoin.pojo.Items;
 public class FirstController {
 
 	MontCoinDAO montcoin = new MontCoinDAO();
+	//test delete account
+	//implement logout on buy page
+	//account deleted 2
 	
-	@PostConstruct
-	/*
-	 * public void init() { //System.out.println("inside init");
-	 * //HttpServletRequest req = new HttpSession s = List<Items> items =
-	 * montcoin.getItems(); List<Items> itemsList = new ArrayList<Items>(); for(int
-	 * i=0; i<items.size(); i++) { if(null != items.get(i) &&
-	 * !items.get(i).getSold().equalsIgnoreCase("yes")) {
-	 * itemsList.add(items.get(i)); } } req.getSession().setAttribute("products",
-	 * itemsList); }
-	 */
+	//Method to move from buy page to login page
+	@RequestMapping("/loginPage")
+	public String redirectToLogin(HttpServletRequest req,Model m){
+		if(null != req.getParameter("userDirection") && !req.getParameter("userDirection").equals("")) {
+			req.getSession().setAttribute("userDirection", req.getParameter("userDirection"));
+			if(null != req.getSession().getAttribute("customer") && req.getParameter("userDirection").equals("sell")) {
+				//move to sell page
+				return "sellpage";
+			}else if(null != req.getSession().getAttribute("customer") && req.getParameter("userDirection").equals("buy")) {
+				//move to buy page list
+				//condition currently not needed
+			}
+		}
+		
+		if(null != req.getParameter("itemSelected")) {
+			req.getSession().setAttribute("itemSelected", req.getParameter("itemSelected"));
+		}
+		return "login";
+	}
 	
+	//method to move from index to buy
+	@RequestMapping("/buyItemList")
+	public String buyItemList(HttpServletRequest req,Model m){
+		req.getSession().setAttribute("userDirection", req.getParameter("userDirection"));
+		List<Items> items = montcoin.getItems();
+		List<Items> itemsList = new ArrayList<Items>();
+		for(int i=0; i<items.size(); i++) {
+			if(null != items.get(i) && !items.get(i).getSold().equalsIgnoreCase("yes")) {
+				itemsList.add(items.get(i));
+			}
+		}
+		req.getSession().setAttribute("products", itemsList);
+		return "buypage";
+	}
 	
 	@RequestMapping("/login")
-	public String getCustomer(HttpServletRequest req,Model m)
-	{
+	public String getCustomer(HttpServletRequest req,Model m){
+		//req.getSession().setAttribute("userDirection", req.getParameter("userDirection"));
 		Customer customer = new Customer();
 		//read the provided form data
 		if(null != req.getSession().getAttribute("customer")) {
@@ -52,7 +78,6 @@ public class FirstController {
 			String accno=req.getParameter("accno");
 			int accountNumber = Integer.parseInt(accno);
 			String pass=req.getParameter("pass");
-			//Customer customer = new Customer();
 			try {
 				customer = montcoin.getCustomer(accountNumber, pass);
 			}catch (Exception e) {
@@ -62,20 +87,30 @@ public class FirstController {
 		
 		if(null != customer && customer.getAccountNumber() != 0 ) {
 			req.getSession().setAttribute("customer", customer);
-			//get items details
-			List<Items> items = montcoin.getItems();
-			List<Items> itemsList = new ArrayList<Items>();
-			for(int i=0; i<items.size(); i++) {
-				if(null != items.get(i) && !items.get(i).getSold().equalsIgnoreCase("yes")) {
-					itemsList.add(items.get(i));
-				}
+			if(null != req.getSession().getAttribute("userDirection") && req.getSession().getAttribute("userDirection").equals("buy")) {
+				//buy item
+				FirstController controller = new FirstController();
+				controller.purchaseItem(req, m);
+				String msg = "Dear "+customer.getName()+" you have successfully purchased the product";
+				m.addAttribute("message",msg);
+				return "buypage";
+			}else if(null != req.getSession().getAttribute("userDirection") && req.getSession().getAttribute("userDirection").equals("sell")) {
+				/*
+				 * FirstController controller = new FirstController(); controller.sellItem(req,
+				 * m); String msg =
+				 * "Dear "+customer.getName()+" you have successfully purchased the product";
+				 * m.addAttribute("message",msg);
+				 */
+				return "sellpage";
 			}
-			req.getSession().setAttribute("products", itemsList);
-			return "buypage";
-		}else {
-			return "errorpage";
+			
 		}
+		
+		String msg = "Sorry "+customer.getName()+" something went wrong. Please try again!";
+		m.addAttribute("message",msg);
+		return "errorpage";
 	}
+	
 	
 	@RequestMapping("/createAcc")
 	public String createCustomer(HttpServletRequest req,Model m)
@@ -83,61 +118,34 @@ public class FirstController {
 		//read the provided form data
 		String name = req.getParameter("name");
 		String pass=req.getParameter("password");
-		int success = 0;
+		String returnValue = "errorpage";
+		int accNo = 0;
 		try {
-			 success = montcoin.createCustomer(name, pass);
+			 accNo = montcoin.createCustomer(name, pass);
+			 Customer customer = montcoin.getCustomer(accNo, pass);
+			 req.getSession().setAttribute("customer", customer);
+			 FirstController controller = new FirstController();
+			 returnValue = controller.getCustomer(req, m);
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		if(success >= 1) {
-			String msg = "Hello "+name+" your account has been successfully created please proceed to login with account number: "+success;
-			m.addAttribute("message",msg);
-			return "viewpage";
-		}else {
-			return "errorpage";
-		}
+		return returnValue;
 	}
 	
 	@RequestMapping("/buy")
 	public String purchaseItem(HttpServletRequest req,Model m){
 		
 		Customer customer = (Customer) req.getSession().getAttribute("customer");
-		if(Integer.parseInt(req.getParameter("tokens")) == 1) {
-			//purchase of tokens
-			String currency = req.getParameter("currency");
-			String coins = req.getParameter("montcoin");
-			
-			double tokens = Double.parseDouble(coins);
-			if(currency.equalsIgnoreCase("USD")) {
-				tokens = tokens * 4;
-			}else if(currency.equalsIgnoreCase("CAD")) {
-				tokens = tokens * 3;
-			}else if(currency.equalsIgnoreCase("AUD")) {
-				tokens = tokens * 2;
-			}else if(currency.equalsIgnoreCase("INR")) {
-				tokens = tokens * 1;
-			}else {
-				tokens = tokens * 5;
-			}
-			
-			int success = montcoin.buyTokens(customer.getAccountNumber(),customer.getToken()+tokens);
-			
-			if(success == 1) {
-				String msg = "Dear "+customer.getName()+" montcoins has been added to your account successfully!";
-				customer.setToken(customer.getToken()+tokens);
-				req.getSession().setAttribute("customer", customer);
-				m.addAttribute("message",msg);
-				return "buypage";
-			}else {
-				String msg = "Sorry "+customer.getName()+" something went wrong. Please try again!";
-				m.addAttribute("message",msg);
-				return "buypage";
-			}
-			
-		}else {
-			//purchase of items
-			String itemRequested = req.getParameter("itemSelected");
+		
+		//if no login and direct call is here, same user purchasing one more item
+		if(null != req.getParameter("itemSelected")) {
+			req.getSession().setAttribute("itemSelected", req.getParameter("itemSelected"));
+		}
+		
+		String itemRequested = (String) req.getSession().getAttribute("itemSelected");
+		
+		if(null != itemRequested) {
 			int item = Integer.parseInt(itemRequested);
 			List<Items> itemsList = (List<Items>) req.getSession().getAttribute("products");
 			
@@ -148,6 +156,7 @@ public class FirstController {
 						//user can buy
 						int success = montcoin.purchaseItem(customer, itemsList.get(i));
 						if(success == 1){
+							//new list of items
 							List<Items> items = montcoin.getItems();
 							List<Items> newItemsList = new ArrayList<Items>();
 							for(int j=0; j<items.size(); j++) {
@@ -172,13 +181,12 @@ public class FirstController {
 					}
 				}
 			}
-			
-			String msg = "Sorry "+customer.getName()+" something went wrong. Please try again!";
-			m.addAttribute("message",msg);
-			return "buypage";
 		}
 		
 		
+		String msg = "Sorry "+customer.getName()+" something went wrong. Please try again!";
+		m.addAttribute("message",msg);
+		return "buypage";
 	}
 	
 	@RequestMapping("/sell")
@@ -189,13 +197,7 @@ public class FirstController {
 		item.setDetails(req.getParameter("pdetails"));
 		item.setPrice(Double.parseDouble(req.getParameter("price")));
 		item.setSold("no");
-		if(customer.getAccountNumber() == Integer.parseInt(req.getParameter("sellerAccNo"))){
-			item.setSeller(Integer.parseInt(req.getParameter("sellerAccNo")));
-		}else {
-			String msg = "Sorry "+customer.getName()+" incorrect account number entered";
-			m.addAttribute("message",msg);
-			return "sellconfirmpage";
-		}
+		item.setSeller(customer.getAccountNumber());
 		
 		int status = montcoin.sellItem(item);
 		
@@ -232,6 +234,7 @@ public class FirstController {
 		}
 		String msg = "Your account has been successfully deleted, we will miss you "+customer.getName();
 		m.addAttribute("message",msg);
+		req.getSession().invalidate();
 		return "viewpage";
 	}
 }

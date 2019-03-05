@@ -5,7 +5,7 @@ UBIT 50289132
  -->
 <html>
 <body>
-<jsp:include page="/sellpage.jsp"></jsp:include>
+<jsp:include page="/index.jsp"></jsp:include>
 ${message}<br><br>
 </body>
 </html>

@@ -23,11 +23,12 @@ function redirectToBuy(){
 	<br>
 	<br>
 	<form name="productsBought" id="productsBoughtForm" action="listProduct">
-		<table width="50%">
+		<table width="70%">
 			<thead>
 				<td width="20%" ><b>Product ID</b></td>
-				<td width="60%"><b>Product Description</b></td>
+				<td width="40%"><b>Product Description</b></td>
 				<td width="20%"><b>Price</b></td>
+				<td width="20%"><b>Seller</b></td>
 			</thead>
 			<tbody>
 				<c:forEach var="item" items="${itemsPurchased}">
@@ -35,6 +36,7 @@ function redirectToBuy(){
 						<td width="20%">${item.itemId}</td>
 						<td width="40%">${item.details}</td>
 						<td width="20%">${item.price}</td>
+						<td width="20%">${item.seller}</td>
 					</tr>
 					<tr></tr>
 					<tr></tr>

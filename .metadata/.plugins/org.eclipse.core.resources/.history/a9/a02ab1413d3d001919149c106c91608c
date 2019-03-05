@@ -1,0 +1,33 @@
+<!-- 
+Shivam Agarwal
+shivamag@buffalo.edu
+UBIT 50289132
+ -->
+<html>
+
+<script type="text/javascript">
+function buyItemList(){
+	document.getElementById('userDirection').action = "buy";
+	document.getElementById('index').action = "buyItemList";
+	document.getElementById('index').submit();
+}
+
+function sellItem(){
+	document.getElementById('userDirection').action = "sell";
+	document.getElementById('index').action = "loginPage";
+	document.getElementById('index').submit();
+}
+</script>
+
+
+<body>
+	<form id="index" action="index">
+		<jsp:include page="/title.jsp"></jsp:include>
+		<input type="hidden" id="userDirection" name="userDirection"/>
+		<!-- <img  src="/BlockChainLab1/WebContent/resources/images/buy.PNG"> -->
+		<input type="button" value="buy items" onclick="javascript:buyItemList()">
+		<input type="button" value="sell items" onclick="javascript:sellItem()">
+	</form>
+	
+</body>
+</html>

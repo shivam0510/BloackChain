@@ -1,0 +1,25 @@
+<!-- 
+Shivam Agarwal
+shivamag@buffalo.edu
+UBIT 50289132
+ -->
+<html>
+	<body>
+		<table width="100%">
+			<tr bgcolor="#7CFC00">
+				<td width="100%">
+					<h1>MarketPlace</h1>
+				</td>
+			</tr>
+			<c:if test="${not empty customer}">
+			<tr></tr>
+			<tr>
+				
+					<td>Hi ${customer.name}</td>
+					<td>Account number: ${customer.accountNumber}</td>	
+				
+			</tr>
+			</c:if>
+		</table>
+	</body>
+</html>

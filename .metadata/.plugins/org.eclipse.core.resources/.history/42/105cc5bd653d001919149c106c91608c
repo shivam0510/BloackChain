@@ -1,0 +1,22 @@
+<!-- 
+Shivam Agarwal
+shivamag@buffalo.edu
+UBIT 50289132
+ -->
+<html>
+	<body>
+		<table width="100%">
+			<tr bgcolor="#7CFC00">
+				<td width="100%">
+					<h1>MarketPlace</h1>
+				</td>
+			</tr>
+			<tr></tr>
+			<tr>
+				<c:if test="${not empty customer}">
+					<input type="button" value="orders placed" onclick="javascript:listProducts();" />	
+				</c:if>
+			</tr>
+		</table>
+	</body>
+</html>
